@@ -30,6 +30,8 @@ class ShoppingList extends React.Component {
     this.handleProductInput = this.handleProductInput.bind(this);
     this.handleQuantityInput = this.handleQuantityInput.bind(this);
     this.handleAddButtonClick = this.handleAddButtonClick.bind(this);
+    this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
+    this.handleLoadButtonClick = this.handleLoadButtonClick.bind(this);
   }
 
   handleProductInput(productName) {
@@ -48,6 +50,17 @@ class ShoppingList extends React.Component {
     this.setState({productList: [...this.state.productList, { name: this.state.product, quantity: this.state.quantity }]});
     this.setState({product: ''});
     this.setState({quantity: ''});
+
+  }
+
+  handleSaveButtonClick() {
+    localStorage.setItem('productList', JSON.stringify(this.state.productList));
+  }
+
+  handleLoadButtonClick() {
+    this.setState({
+      productList: JSON.parse(localStorage.getItem('productList'))
+    });
   }
 
   render() {
@@ -63,6 +76,8 @@ class ShoppingList extends React.Component {
         <ProductTable
           products={this.state.productList}
         />
+        <button onClick={this.handleSaveButtonClick}>Save</button>
+        <button onClick={this.handleLoadButtonClick}>Load</button>
       </div>
     );
   }
@@ -86,18 +101,34 @@ class AddProductBar extends React.Component {
 
   handleAddButtonClick(e) {
     this.props.onAddButtonClick(e);
+    this.productInput.focus();
   }
 
   render() {
     return (
       <div>
         <label for="product">Product: </label>
-        <input type="text" name="product" value={this.props.product} onChange={this.handleProductInputChange} />
+        <input
+          type="text"
+          name="product"
+          value={this.props.product}
+          onChange={this.handleProductInputChange}
+          ref={input => this.productInput = input}
+        />
         <label for="quantity">Quantity: </label>
-        <input type="text" name="quantity" value={this.props.quantity} onChange={this.handleQuantityInputChange} />
+        <input
+          type="text"
+          name="quantity"
+          value={this.props.quantity}
+          onChange={this.handleQuantityInputChange}
+        />
         <button onClick={this.handleAddButtonClick}>Add Product</button>
       </div>
     );
+  }
+
+  componentDidMount(){
+    this.productInput.focus();
   }
 }
 
