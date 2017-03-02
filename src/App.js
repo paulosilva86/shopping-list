@@ -139,7 +139,8 @@ class ProductTable extends React.Component {
 
     return (
       <div>
-        <table>
+        <h3>Shopping List</h3>
+        <table className="productTable">
           <thead>
             <tr>
               <th>Product</th>
