@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import ShoppingList from './components/ShoppingList'
 
 class App extends Component {
   render() {
@@ -10,159 +11,10 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h2>Welcome to React</h2>
         </div>
-        <p className="App-intro">
+        <div className="App-intro">
           <ShoppingList />
-        </p>
+        </div>
       </div>
-    );
-  }
-}
-
-class ShoppingList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      product: '',
-      quantity: '',
-      productList: [] // { name: "Milk", quantity: "1" }
-    };
-
-    this.handleProductInput = this.handleProductInput.bind(this);
-    this.handleQuantityInput = this.handleQuantityInput.bind(this);
-    this.handleAddButtonClick = this.handleAddButtonClick.bind(this);
-    this.handleSaveButtonClick = this.handleSaveButtonClick.bind(this);
-    this.handleLoadButtonClick = this.handleLoadButtonClick.bind(this);
-  }
-
-  handleProductInput(productName) {
-    this.setState({
-      product: productName
-    })
-  }
-
-  handleQuantityInput(quantity) {
-    this.setState({
-      quantity: quantity
-    })
-  }
-
-  handleAddButtonClick() {
-    this.setState({productList: [...this.state.productList, { name: this.state.product, quantity: this.state.quantity }]});
-    this.setState({product: ''});
-    this.setState({quantity: ''});
-
-  }
-
-  handleSaveButtonClick() {
-    localStorage.setItem('productList', JSON.stringify(this.state.productList));
-  }
-
-  handleLoadButtonClick() {
-    this.setState({
-      productList: JSON.parse(localStorage.getItem('productList'))
-    });
-  }
-
-  render() {
-    return (
-      <div>
-        <AddProductBar
-          product={this.state.product}
-          quantity={this.state.quantity}
-          onProductInput={this.handleProductInput}
-          onQuantityInput={this.handleQuantityInput}
-          onAddButtonClick={this.handleAddButtonClick}
-        />
-        <ProductTable
-          products={this.state.productList}
-        />
-        <button onClick={this.handleSaveButtonClick}>Save</button>
-        <button onClick={this.handleLoadButtonClick}>Load</button>
-      </div>
-    );
-  }
-}
-
-class AddProductBar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleProductInputChange = this.handleProductInputChange.bind(this);
-    this.handleQuantityInputChange = this.handleQuantityInputChange.bind(this);
-    this.handleAddButtonClick = this.handleAddButtonClick.bind(this);
-  }
-
-  handleProductInputChange(e) {
-    this.props.onProductInput(e.target.value);
-  }
-
-  handleQuantityInputChange(e) {
-    this.props.onQuantityInput(e.target.value);
-  }
-
-  handleAddButtonClick(e) {
-    this.props.onAddButtonClick(e);
-    this.productInput.focus();
-  }
-
-  render() {
-    return (
-      <div>
-        <label for="product">Product: </label>
-        <input
-          type="text"
-          name="product"
-          value={this.props.product}
-          onChange={this.handleProductInputChange}
-          ref={input => this.productInput = input}
-        />
-        <label for="quantity">Quantity: </label>
-        <input
-          type="text"
-          name="quantity"
-          value={this.props.quantity}
-          onChange={this.handleQuantityInputChange}
-        />
-        <button onClick={this.handleAddButtonClick}>Add Product</button>
-      </div>
-    );
-  }
-
-  componentDidMount(){
-    this.productInput.focus();
-  }
-}
-
-class ProductTable extends React.Component {
-  render() {
-    var rows = [];
-    this.props.products.forEach((product) => rows.push(<ProductRow name={product.name} quantity={product.quantity} />));
-
-    return (
-      <div>
-        <h3>Shopping List</h3>
-        <table className="productTable">
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows}
-          </tbody>
-        </table>
-      </div>
-    );
-  }
-}
-
-class ProductRow extends React.Component {
-  render() {
-    return (
-      <tr>
-        <td>{this.props.name}</td>
-        <td>{this.props.quantity}</td>
-      </tr>
     );
   }
 }
